@@ -1,0 +1,6 @@
+interface:
+  display_name: "SCI_manuscript_format"
+  short_description: "Format SCI manuscript DOCX files with reviewed rules."
+  default_prompt: "Use $sci-manuscript-format to create, revise, or audit an SCI manuscript DOCX and verify every formatting role."
+policy:
+  allow_implicit_invocation: true
