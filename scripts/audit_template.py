@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit structural invariants in the reviewed SCI manuscript template."""
+"""Audit structural invariants in the reviewed EngGeo manuscript template."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ from lxml import etree
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_TEMPLATE = ROOT / "assets" / "SCI_manuscript_template.docx"
+DEFAULT_TEMPLATE = ROOT / "assets" / "enggeo_manuscript_template.docx"
 NS = {
     "w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
     "m": "http://schemas.openxmlformats.org/officeDocument/2006/math",

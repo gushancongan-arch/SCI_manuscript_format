@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the reviewed SCI manuscript DOCX template."""
+"""Build the reviewed EngGeo manuscript DOCX template."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from docx.shared import Cm, Pt, RGBColor
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUTPUT = ROOT / "assets" / "SCI_manuscript_template.docx"
+DEFAULT_OUTPUT = ROOT / "assets" / "enggeo_manuscript_template.docx"
 BLACK = RGBColor(0, 0, 0)
 BLUE = RGBColor(5, 99, 193)
 WRITABLE_WIDTH_CM = 15.92
@@ -645,9 +645,9 @@ def build_template(output: Path) -> Path:
     set_update_fields(document)
 
     properties = document.core_properties
-    properties.title = "SCI Manuscript Template"
+    properties.title = "EngGeo Manuscript Template"
     properties.subject = "Reviewed English-language SCI manuscript formatting template"
-    properties.author = "SCI Manuscript Format skill"
+    properties.author = "EngGeo Manuscript Format skill"
     properties.keywords = "SCI manuscript, DOCX template, three-line table, OMML"
     properties.created = datetime(2026, 9, 1, tzinfo=timezone.utc)
     properties.modified = datetime(2026, 9, 1, tzinfo=timezone.utc)
