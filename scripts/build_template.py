@@ -37,6 +37,10 @@ def set_font_name(font, name: str = "Times New Roman") -> None:
     rfonts = rpr.get_or_add_rFonts()
     for attr in ("ascii", "hAnsi", "eastAsia", "cs"):
         rfonts.set(qn(f"w:{attr}"), name)
+    for attr in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme"):
+        key = qn(f"w:{attr}")
+        if key in rfonts.attrib:
+            del rfonts.attrib[key]
 
 
 def set_run_font(run, size: float, *, bold=None, italic=None, color=BLACK) -> None:
@@ -134,6 +138,7 @@ def configure_paragraph_style(
     bold: bool = False,
     italic: bool = False,
     outline_level: int | None = None,
+    first_line_cm: float = 0,
 ):
     style = get_or_add_style(document, name, WD_STYLE_TYPE.PARAGRAPH)
     set_font_name(style.font)
@@ -147,6 +152,8 @@ def configure_paragraph_style(
     fmt.space_before = Pt(before)
     fmt.space_after = Pt(after)
     set_zero_indent(style)
+    if first_line_cm:
+        fmt.first_line_indent = Cm(first_line_cm)
     if outline_level is not None:
         ppr = style._element.get_or_add_pPr()
         outline = ppr.find(qn("w:outlineLvl"))
@@ -166,6 +173,7 @@ def configure_styles(document: Document) -> None:
         line_spacing=1.5,
         before=6,
         after=6,
+        first_line_cm=0.85,
     )
     configure_paragraph_style(
         document,
@@ -370,10 +378,11 @@ def add_title_block(document: Document) -> None:
 
 def add_abstract(document: Document) -> None:
     document.add_paragraph("Abstract", style="Heading 1")
-    document.add_paragraph(
+    abstract = document.add_paragraph(
         "Replace this text with a self-contained abstract. This paragraph uses the Normal style: Times New Roman 12 pt, justified, 1.5 line spacing, 6 pt before and after, and no first-line indent.",
         style="Normal",
     )
+    set_zero_indent(abstract)
     keywords = document.add_paragraph(style="Normal")
     keywords.alignment = WD_ALIGN_PARAGRAPH.LEFT
     set_zero_indent(keywords)
@@ -548,23 +557,23 @@ def add_manuscript_elements(document: Document, figure_path: Path) -> None:
     paragraph = document.add_paragraph(style="Normal")
     set_run_font(
         paragraph.add_run(
-            "Replace this text with manuscript content. Preserve an author-year system such as Smith (2024), or retain an existing numeric citation such as "
+            "Replace with manuscript text. Preserve an author-year system such as Smith (2024), or an existing numeric citation such as "
         ),
         12,
     )
     citation = paragraph.add_run("1")
     set_run_font(citation, 12)
     citation.font.superscript = True
-    set_run_font(paragraph.add_run(" without converting the manuscript from one system to another."), 12)
+    set_run_font(paragraph.add_run("."), 12)
 
     document.add_paragraph("1.1 Study context", style="Heading 2")
     document.add_paragraph(
-        "Use Normal for ordinary narrative paragraphs. Replace all bracketed or instructional text before submission.",
+        "Use Normal for ordinary narrative paragraphs.",
         style="Normal",
     )
     document.add_paragraph("1.1.1 Optional third-level heading", style="Heading 3")
     document.add_paragraph(
-        "This paragraph confirms that all three heading levels and the Normal body style are available.",
+        "All three heading levels use Times New Roman.",
         style="Normal",
     )
 

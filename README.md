@@ -17,7 +17,9 @@ This is a general draft convention. Current target-journal instructions override
 
 - A4 portrait with 2.54 cm margins and a centered dynamic footer page number
 - continuous Word line numbering in every section; `Line Number` uses Times New Roman 11 pt
-- `Normal` body text: Times New Roman 12 pt, justified, 1.5 spacing, 6 pt before and after, no indent
+- `Normal` body text: Times New Roman 12 pt, justified, 1.5 spacing, 6 pt before and after, 0.85 cm first-line indent
+- zero-indent exceptions for title-page text, abstract prose, Keywords, captions, equations, tables, and references
+- Times New Roman for the manuscript title and every heading, with Word theme-font overrides removed
 - exact English manuscript-role styles: `Normal`, `Figure`, `Figure Caption`, `Table Caption`, `Equation`, `Table`, `Reference`, and `Heading 1`–`Heading 3`
 - 12 pt italic justified figure captions below figures
 - 12 pt italic left-aligned table captions above three-line tables

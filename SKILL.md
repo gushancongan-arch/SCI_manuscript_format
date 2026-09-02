@@ -25,9 +25,10 @@ For a new manuscript, start from [assets/SCI_manuscript_template.docx](assets/SC
 
 ## Core formatting rules
 
-- `Normal`: Times New Roman 12 pt, justified, 1.5 line spacing, 6 pt before and after, with zero first-line, hanging, left, and right indent.
-- `Heading 1`, `Heading 2`, and `Heading 3`: Times New Roman 14 pt bold.
+- `Normal`: Times New Roman 12 pt, justified, 1.5 line spacing, 6 pt before and after, with a 0.85 cm first-line indent and zero left, right, and hanging indent. Ordinary body and body-like declaration paragraphs inherit this setting.
+- The manuscript title, `Abstract` heading, all numbered and unnumbered section headings, and `Heading 1`, `Heading 2`, and `Heading 3` must render in Times New Roman. Clear Word theme-font attributes instead of relying only on a displayed font name. `Heading 1`–`Heading 3` are 14 pt bold.
 - Author names are centered. Affiliations, corresponding-author text, `Abstract`, and `Keywords` are flush left with zero paragraph indent. Abstract prose and the Keywords paragraph use `Normal`.
+- Override the `Normal` first-line indent to zero for title-page text, abstract prose, Keywords, figure/table captions, equations, table cells, and other non-body roles.
 - Table-cell paragraphs have zero first-line, hanging, left, and right indent, including removal of inherited character-unit indent attributes.
 - Three-line tables have no vertical rules, ordinary row separators, shading, or Table Grid treatment.
 - Figure captions remain italic, below the figure, 12 pt, and justified. Table captions remain italic, above the table, 12 pt, and left aligned.

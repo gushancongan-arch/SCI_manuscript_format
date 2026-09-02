@@ -84,21 +84,48 @@ def style_by_id(document: Document, style_id: str):
 
 def font_name_is_tnr(style) -> bool:
     font = style.font
-    if font.name == "Times New Roman":
-        return True
     rpr = style._element.find(qn("w:rPr"))
+    if rpr is None:
+        return font.name == "Times New Roman"
+    rfonts = rpr.find(qn("w:rFonts"))
+    if rfonts is None:
+        return font.name == "Times New Roman"
+    explicit_tnr = all(rfonts.get(qn(f"w:{attr}")) == "Times New Roman" for attr in ("ascii", "hAnsi"))
+    no_theme_override = all(
+        rfonts.get(qn(f"w:{attr}")) is None
+        for attr in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme")
+    )
+    return explicit_tnr and no_theme_override
+
+
+def run_font_is_tnr(run) -> bool:
+    rpr = run._r.find(qn("w:rPr"))
     if rpr is None:
         return False
     rfonts = rpr.find(qn("w:rFonts"))
     if rfonts is None:
         return False
-    return all(rfonts.get(qn(f"w:{attr}")) == "Times New Roman" for attr in ("ascii", "hAnsi"))
+    return (
+        all(rfonts.get(qn(f"w:{attr}")) == "Times New Roman" for attr in ("ascii", "hAnsi"))
+        and all(
+            rfonts.get(qn(f"w:{attr}")) is None
+            for attr in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme")
+        )
+    )
 
 
 def zero_indents(fmt) -> bool:
     return all(
         close(point_value(value), 0)
         for value in (fmt.left_indent, fmt.right_indent, fmt.first_line_indent)
+    )
+
+
+def normal_indent_is_085_cm(fmt) -> bool:
+    return (
+        close(fmt.first_line_indent.cm if fmt.first_line_indent is not None else None, 0.85, 0.01)
+        and close(point_value(fmt.left_indent), 0)
+        and close(point_value(fmt.right_indent), 0)
     )
 
 
@@ -117,7 +144,7 @@ def audit_styles(document: Document, audit: Audit) -> None:
     audit.check("Normal font", font_name_is_tnr(normal) and close(point_value(normal.font.size), 12), "Times New Roman 12 pt")
     audit.check("Normal alignment and spacing", fmt.alignment == WD_ALIGN_PARAGRAPH.JUSTIFY and fmt.line_spacing == 1.5, "justified, 1.5 spacing")
     audit.check("Normal paragraph spacing", close(point_value(fmt.space_before), 6) and close(point_value(fmt.space_after), 6), "6 pt before and after")
-    audit.check("Normal has zero indents", zero_indents(fmt), "zero first-line, left, and right indent")
+    audit.check("Normal body first-line indent", normal_indent_is_085_cm(fmt), "0.85 cm first-line; zero left and right indent")
 
     figure = document.styles["Figure"]
     audit.check(
@@ -280,9 +307,19 @@ def audit_roles(document: Document, document_xml, audit: Audit) -> None:
     audit.check("Table style explicitly assigned", table_style_id in assigned_table_styles, table_style_id)
 
     text_to_style = {paragraph.text.strip(): paragraph.style.name for paragraph in document.paragraphs}
+    title_paragraphs = [p for p in document.paragraphs if p.text.startswith("Manuscript title:")]
+    title_font_ok = bool(title_paragraphs) and all(
+        run_font_is_tnr(run) for run in title_paragraphs[0].runs if run.text
+    )
+    audit.check("main title uses explicit Times New Roman", title_font_ok, "no theme-font override")
     audit.check("Abstract heading uses Heading 1", text_to_style.get("Abstract") == "Heading 1", str(text_to_style.get("Abstract")))
     abstract_paragraphs = [p for p in document.paragraphs if p.text.startswith("Replace this text with a self-contained abstract")]
-    audit.check("abstract prose uses Normal", bool(abstract_paragraphs) and abstract_paragraphs[0].style.name == "Normal", "Normal")
+    abstract_ok = (
+        bool(abstract_paragraphs)
+        and abstract_paragraphs[0].style.name == "Normal"
+        and zero_indents(abstract_paragraphs[0].paragraph_format)
+    )
+    audit.check("abstract prose uses zero-indent Normal", abstract_ok, "Normal with direct zero-indent override")
     keyword_paragraphs = [p for p in document.paragraphs if p.text.startswith("Keywords:")]
     keyword_ok = bool(keyword_paragraphs) and keyword_paragraphs[0].style.name == "Normal" and keyword_paragraphs[0].alignment == WD_ALIGN_PARAGRAPH.LEFT
     audit.check("Keywords uses flush-left Normal", keyword_ok, "Normal with direct left alignment")

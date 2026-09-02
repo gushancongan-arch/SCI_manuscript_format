@@ -27,13 +27,15 @@
 ## Typography and paragraph roles
 
 - Primary Latin font: Times New Roman; text color black.
+- Every manuscript title and heading must render in Times New Roman, including the main title, `Abstract`, numbered and unnumbered section headings, and Heading 1/2/3. Remove inherited Word theme-font attributes (`asciiTheme`, `hAnsiTheme`, `eastAsiaTheme`, and `cstheme`) so a theme font cannot override Times New Roman during Word rendering.
 - Title: 14 pt bold, centered, 1.5 line spacing, 6 pt before, 0 pt after, no indent.
 - Author-name line: 12 pt regular, centered, 1.5 line spacing, 6 pt before, 0 pt after, zero left, right, and first-line indent.
 - Affiliations and corresponding-author information: 12 pt regular, flush left, 1.5 line spacing, 6 pt before, 0 pt after, zero left, right, and first-line indent. Affiliation markers are true superscript. Email may be a blue underlined `mailto` hyperlink.
-- `Abstract` uses `Heading 1`. Abstract prose uses `Normal` and is flush left at the first line because `Normal` has no first-line indent.
+- `Abstract` uses `Heading 1`. Abstract prose uses `Normal` with a direct zero first-line-indent override so the abstract remains flush left.
 - Keywords use `Normal`; the `Keywords:` label is bold and the keyword text is regular in the same paragraph. The complete paragraph is flush left with zero paragraph indent.
 - `Heading 1`, `Heading 2`, and `Heading 3`: Times New Roman 14 pt bold, black, 1.5 line spacing, 6 pt before, 0 pt after, no indent, outline levels 1/2/3. Numbering is manually typed unless the user requests real multilevel numbering.
-- `Normal`: Times New Roman 12 pt regular, black, justified, 1.5 line spacing, 6 pt before and 6 pt after, with zero first-line, hanging, left, and right indent.
+- `Normal`: Times New Roman 12 pt regular, black, justified, 1.5 line spacing, 6 pt before and 6 pt after, with a 0.85 cm first-line indent and zero hanging, left, and right indent.
+- Ordinary manuscript body paragraphs and body-like declarations inherit the 0.85 cm first-line indent. Apply a direct zero-indent exception to title-page text, abstract prose, Keywords, figures, captions, tables, equations, and references.
 - Acknowledgments, Funding, CRediT, Competing interests, Data availability, and Ethics statement use `Heading 1` followed by `Normal` paragraphs.
 
 ### Exact manuscript-role styles
@@ -117,7 +119,8 @@ Before delivery, verify at minimum:
 - package integrity and no Word repair warning;
 - A4 geometry, margins, blank header, centered dynamic footer `PAGE` field, continuous line numbering, and 11 pt `Line Number` style;
 - exact manuscript-role style inventory and absence of legacy manuscript-role styles;
-- `Normal` applied to ordinary body, abstract prose, Keywords, and declarations;
+- Times New Roman confirmed for the main title and every heading, with no theme-font override remaining;
+- `Normal` applied to ordinary body, abstract prose, Keywords, and declarations; ordinary body inherits 0.85 cm first-line indent while the confirmed non-body exceptions remain at zero;
 - figure captions below figures, 12 pt italic and justified;
 - table captions above tables, 12 pt italic and left aligned;
 - three-line-table borders, repeat header, cell indents, and fixed geometry;
